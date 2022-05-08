@@ -1,0 +1,15 @@
+{
+  "name": "quickdrop",
+  "version": "1.0.0",
+  "description": "quickly send files across devices",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "author": "BG",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.16",
+    "socket.io": "^4.5.0"
+  }
+}
