@@ -31,7 +31,7 @@
     Code: {{sessionCode}}
   </div>
   <Camera v-if="cameraActive" @sendImage="handleSendImage"/>
-  <Receiver v-else-if="receiverActive" :imgDataArray="imgDataArray"/>
+  <Receiver v-else-if="receiverActive" ref="receiver"/>
 </template>
 
 <script>
@@ -55,7 +55,6 @@ export default {
       sessionCode: '',
       joinSessionCode: '',
       joinSessionErr: '',
-      imgDataArray: [],
 
       socketIsConnected: false,
     }
@@ -64,8 +63,7 @@ export default {
     socket.on('sessionCode', code => this.sessionCode = code)
     socket.on('unknownSession', () => this.joinSessionErr = 'Invalid session code')
     socket.on('initReceiver', () => this.receiverActive = true)
-    socket.on('receiveImage', this.handleReceiveImage)
-    // setInterval(() => console.log(socket.connected), 1000)
+    socket.on('receiveImage', (data) => this.$refs.receiver.handleReceiveImage(data))
     const serverCheck = setInterval(() => {
       if(socket.connected){
         clearInterval(serverCheck)
@@ -82,14 +80,9 @@ export default {
       socket.emit('joinSession', this.joinSessionCode)
     },
     handleSendImage(imgData) {
-      console.log(imgData)
       socket.emit('sendImage', imgData)
     },
-    handleReceiveImage(imgDataSrc) {
-      // console.log(imgData)
-      console.log('received img')
-      this.imgDataArray.push(imgDataSrc)
-    }
+
   }
 }
 </script>

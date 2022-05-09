@@ -1,0 +1,11 @@
++ means done
+x means done, untested
+
++ Clear images
+x Download all (pdf)
+x Mobile-friendly video and canvas widths
+x Mobile-friendly take picture button
+Mobile - flip camera
++ Remove or improve live feature
+Screenshots of PC to phone
+Allow user to upload photos to be in pdf
