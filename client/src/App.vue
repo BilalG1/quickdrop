@@ -27,10 +27,7 @@
     </div>
   </div>
 
-  <div v-if="sessionCode" class="code">
-    Code: {{sessionCode}}
-  </div>
-  <Camera v-if="cameraActive" @sendImage="handleSendImage"/>
+  <Camera v-if="cameraActive" @sendImage="handleSendImage" :code="sessionCode"/>
   <Receiver v-else-if="receiverActive" ref="receiver"/>
 </template>
 

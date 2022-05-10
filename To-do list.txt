@@ -1,11 +1,14 @@
 + means done
-x means done, untested
+x means done, could use more work
 
 + Clear images
 x Download all (pdf)
-x Mobile-friendly video and canvas widths
++ Mobile-friendly video and canvas widths
 x Mobile-friendly take picture button
 Mobile - flip camera
 + Remove or improve live feature
-Screenshots of PC to phone
++ Screenshots of PC to phone
++ Crop screenshots
 Allow user to upload photos to be in pdf
+Add variable image sizes and grid to display them
+Add variable screen record size

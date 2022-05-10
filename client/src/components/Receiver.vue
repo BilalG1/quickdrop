@@ -2,17 +2,18 @@
     <div class="receive-wrapper">
         <div class="header">
             {{displayNumPhotos()}}
-            <button class="clear-btn" @click="clearAll" v-if="imgDataArray.length">
+            <button class="img-btn clear-btn" @click="clearAll" v-if="imgDataArray.length">
                 Clear
             </button>
-            <button class="clear-btn" @click="makePDF" v-if="imgDataArray.length">
+            <button class="img-btn clear-btn" @click="makePDF" v-if="imgDataArray.length">
                 Make PDF
             </button>
         </div>
+        <div class="group-flex-test">
         <TransitionGroup name="img-list">
-            <div v-for="(imgData, index) of imgDataArray" class="img-data-wrap" :key="imgData.substring(100,150)">
+            <div v-for="(imgData, index) of imgDataArray" class="img-data-wrap" :key="imgData.substring(0, 300)">
                 <div>
-                    <img :src="imgData" :ref="imgData.substring(100,150)"/>
+                    <img :src="imgData" :ref="imgData.substring(0, 300)" class="img-received"/>
                 </div>
                 <div>
                     <a download="image.png" :href="imgData" class="img-btn">
@@ -21,12 +22,19 @@
                     <button class="img-btn" @click="() => removeImg(index)">
                         Remove
                     </button>
-                    <button class="img-btn" :class="{'is-copied': (copyKey === imgData.substring(100,150))}" @click="() => copyImgToClipboard(index)">
-                        {{(copyKey === imgData.substring(100,150)) ? 'Copied!' : 'Copy'}}
+                    <button class="img-btn" :class="{'is-copied': (copyKey === imgData.substring(0, 300))}" @click="() => copyImgToClipboard(index)">
+                        {{(copyKey === imgData.substring(0, 300)) ? 'Copied!' : 'Copy'}}
+                    </button>
+                    <button class="img-btn" @click="() => swapArrayValues(index, index+1)" :disabled="index === imgDataArray.length - 1">
+                        &dArr;
+                    </button>
+                    <button class="img-btn" @click="() => swapArrayValues(index, index-1)" :disabled="index === 0">
+                        &uArr;
                     </button>
                 </div>
             </div>
         </TransitionGroup>
+        </div>
     </div>
 </template>
 
@@ -63,7 +71,7 @@ export default {
             this.imgDataArray.push(imgDataSrc)
         },
         copyImgToClipboard(index) {
-            this.copyKey = this.imgDataArray[index].substring(100,150)
+            this.copyKey = this.imgDataArray[index].substring(0, 300)
             fetch(this.imgDataArray[index])
             .then(res => res.blob())
             .then(blob => {
@@ -87,8 +95,8 @@ export default {
 
             this.imgDataArray.forEach((img) => {
                 const type = img.substring(img.indexOf('/')+1, img.indexOf(';'))
-                const imgW = this.$refs[img.substring(100,150)][0].width
-                const imgH = this.$refs[img.substring(100,150)][0].height
+                const imgW = this.$refs[img.substring(0, 300)][0].width
+                const imgH = this.$refs[img.substring(0, 300)][0].height
                 const [imgWidthScaled, imgHeightScaled] = this.imageDimsOnA4(imgW, imgH)
 
                 doc.addPage()
@@ -104,6 +112,11 @@ export default {
             const pdfURL = doc.output("bloburl");
             window.open(pdfURL)
             // window.open(pdfURL as any, "_blank");
+        },
+        swapArrayValues(ind1, ind2){
+            if(ind1 < 0 || ind2 < 0 || ind1 >= this.imgDataArray.length || ind2 >= this.imgDataArray.length)
+                return
+            [this.imgDataArray[ind1], this.imgDataArray[ind2]] = [this.imgDataArray[ind2], this.imgDataArray[ind1]]
         }
     }
 }
@@ -111,18 +124,20 @@ export default {
 
 <style scoped>
 .receive-wrapper{
-    margin-top: 20px;
+    margin-top: 0px;
 }
 .header{
     font-size: 24px;
     font-weight: 600;
-    margin-top: 40px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    background: #ffe7cf;
+    box-shadow: 0 -5px 30px orange;
+    position: sticky;
+    top: 0;
 }
 .img-data-wrap{
     margin-top: 20px;
-}
-.clear-btn{
-    margin-left: 20px;
 }
 .img-btn{
   color: black;
@@ -139,6 +154,15 @@ export default {
 }
 .img-btn:hover{
   background: lightgray;
+}
+.img-btn:disabled{
+    background: lightgray;
+    cursor: initial;
+}
+.clear-btn{
+    margin: 0;
+    margin-left: 20px;
+    border: 2px solid orange;
 }
 
 .img-list-move,
@@ -165,5 +189,8 @@ export default {
 }
 .is-copied:hover{
     background: orange;
+}
+.img-received{
+    max-width: 100%;
 }
 </style>
